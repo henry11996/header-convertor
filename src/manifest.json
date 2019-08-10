@@ -1,0 +1,23 @@
+{
+  "name": "header-conversion",
+  "description": "can conver a data header",
+  "version": "0.0.1",
+  "manifest_version": 2,
+  "permissions": [
+    "storage"
+  ],
+  "icons": {
+    "128": "icons/icon_128.png"
+  },
+  "browser_action": {
+    "default_title": "header-conversion",
+    "default_popup": "popup/popup.html"
+  },
+  "background": {
+    "scripts": [
+      "background.js"
+    ]
+  },
+  "options_page": "options/options.html",
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
+}
