@@ -16,7 +16,9 @@ import {
     Step,
     Option,
     OptionGroup,
-    Input
+    Input,
+    Transfer,
+    Notification
 } from "element-ui";
 Vue.use(Button);
 Vue.use(Select);
@@ -30,6 +32,8 @@ Vue.use(Step);
 Vue.use(Option);
 Vue.use(OptionGroup);
 Vue.use(Input);
+Vue.use(Transfer);
+Vue.use(Notification);
 new Vue({
     el: "#app",
     store,

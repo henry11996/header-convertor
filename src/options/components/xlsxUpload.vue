@@ -53,7 +53,8 @@ export default {
 				let header = {};
 				header["name"] = file.name;
 				header["sheets"] = [];
-				header["sheets"].push(this.takeHeader(tmp));
+				header["sheets"] = this.takeHeader(tmp);
+				console.log(header);
 				this.setSourceHeader(header);
 			}
 		}

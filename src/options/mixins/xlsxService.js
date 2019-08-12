@@ -29,11 +29,13 @@ export default {
             });
         },
         takeHeader(datas) {
-            let headers = {};
+            let headers = [];
             datas.forEach(value => {
                 let header = Object.keys(value.sheet[0]);
-                headers["name"] = value.name;
-                headers["header"] = header;
+                let tmp = {};
+                tmp["name"] = value.name;
+                tmp["header"] = header;
+                headers.push(tmp);
             });
             return headers;
         }

@@ -1,5 +1,6 @@
 <template>
 	<div class="xlsx_table">
+		<span>請選擇要使用的表頭</span>
 		<el-select v-model="selectedValue" placeholder="請選擇資料表" no-data-text="無資料(請上傳資料)">
 			<el-option-group v-for="(file, index) in soureHeaders" :key="index" :label="file.name">
 				<el-option
@@ -10,21 +11,13 @@
 				></el-option>
 			</el-option-group>
 		</el-select>
-		<el-table
-			ref="multipleTable"
-			:data="tableValue"
-			tooltip-effect="dark"
-			stripe
-			border
-			size="medium"
-			empty-text="請選擇資料表"
-			@selection-change="handleSelectionChange"
-		>
-			<el-table-column type="selection" width="55"></el-table-column>
-			<el-table-column label="表頭" width="120">
-				<template slot-scope="scope">{{ scope.row }}</template>
-			</el-table-column>
-		</el-table>
+		<el-transfer
+			v-model="transferData"
+			:data="dataValues"
+			:titles="['Source', 'Target']"
+			empty-text="無資料(請上傳資料)"
+			@change="handleSelectionChange"
+		></el-transfer>
 	</div>
 </template>
 
@@ -33,20 +26,42 @@ import { mapGetters, mapActions } from "vuex";
 export default {
 	data() {
 		return {
-			selectedValue: ""
+			selectedValue: [],
+			dataValues: [],
+			transferData: this.headers
 		};
 	},
+	watch: {
+		selectedValue() {
+			if (typeof this.selectedValue == "object") {
+				let len = this.dataValues.length;
+				this.selectedValue.forEach((label, key) => {
+					this.dataValues.push({
+						key: key + len,
+						label,
+						disabled: false
+					});
+				});
+			}
+		}
+	},
 	computed: {
-		tableValue() {
-			if (this.selectedValue == "") return [];
-			return this.selectedValue;
-		},
 		...mapGetters(["soureHeaders", "headers"])
 	},
 	methods: {
-		handleSelectionChange(value) {
-			this.setSelectedHeader(value);
+		handleSelectionChange() {
+			let tmp = [];
+			this.dataValues.forEach((value, index) => {
+				if (this.transferData.includes(value.key)) {
+					tmp.push({
+						action: "none",
+						value: value.label
+					});
+				}
+			});
+			this.setHeader(tmp);
 		},
+		filterMethod() {},
 		...mapActions(["setSelectedHeader", "setHeader"])
 	}
 };

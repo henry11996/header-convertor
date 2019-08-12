@@ -10,10 +10,11 @@
 		</div>
 		<div v-if="active == 1" class="step_2">
 			<xlsx-table></xlsx-table>
+		</div>
+		<div v-if="active == 2" class="step_3">
 			<head-editer></head-editer>
 			<sortable-box></sortable-box>
 		</div>
-		<div v-if="active == 2" class="step_3"></div>
 		<div class="but">
 			<el-button type="primary" plain @click="preStep" :disabled="active==0">上一步</el-button>
 			<el-button type="primary" plain @click="nextStep" :disabled="active==2">下一步</el-button>
@@ -54,7 +55,9 @@ export default {
 	text-align: center;
 }
 .step_2 {
-	display: inline-flex;
+	margin: 10px;
+	display: flex;
+	justify-content: center;
 }
 </style>
 >
