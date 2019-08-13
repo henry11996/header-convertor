@@ -1,16 +1,29 @@
 <template>
 	<div class="main">
 		<div class="transfer_btns">
-			<el-button type="primary" icon="el-icon-caret-top" @click="positionControl('up')" circle></el-button>
-			<el-button type="primary" icon="el-icon-caret-bottom" @click="positionControl('down')" circle></el-button>
+			<el-button
+				type="primary"
+				icon="el-icon-caret-top"
+				@click="positionControl('up')"
+				circle
+				:disabled="multipleSelection.length !== 1"
+			></el-button>
+			<el-button
+				type="primary"
+				icon="el-icon-caret-bottom"
+				@click="positionControl('down')"
+				circle
+				:disabled="multipleSelection.length !== 1"
+			></el-button>
 		</div>
 		<el-table
 			ref="multipleTable"
-			:data="testHeaders"
+			:data="headers"
 			tooltip-effect="dark"
 			@selection-change="handleSelectionChange"
 			empty-text="無資料"
 			stripe
+			max-height="300px"
 		>
 			<el-table-column type="selection" width="55"></el-table-column>
 			<el-table-column label="表頭" width="100">
@@ -25,13 +38,19 @@
 			<el-select v-model="selectedOption" placeholder="選擇方法">
 				<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
 			</el-select>
-			<div v-if="selectedOption == 'change' && multipleSelection.length != 0  " class="change">
+			<div v-if="selectedOption == 'change'  && multipleSelection.length > 0  " class="change">
 				<el-input v-model="changeNameValue" placeholder="輸入修改的名字"></el-input>
 			</div>
+			<div v-else-if="selectedOption == 'merge' && multipleSelection.length > 1">
+				<el-input v-model="mergeWay" placeholder="輸入要合併的方式"></el-input>
+			</div>
+			<div v-else-if="selectedOption == 'key-value' && multipleSelection.length == 1">
+				<el-input v-model="keyValueValue" placeholder="對應的欄位名稱"></el-input>
+			</div>
 			<div class="edit_button">
-				<el-button type="primary" icon="el-icon-refresh-left" circle @click="restore"></el-button>
-				<el-button type="warning" icon="el-icon-check" circle @click="action"></el-button>
-				<el-button type="danger" icon="el-icon-delete" circle @click="remove"></el-button>
+				<el-button type="primary" icon="el-icon-refresh-left" circle @click="edit('restore')"></el-button>
+				<el-button type="warning" icon="el-icon-check" circle @click="edit('ok')"></el-button>
+				<el-button type="danger" icon="el-icon-delete" circle @click="edit('remove')"></el-button>
 			</div>
 		</div>
 	</div>
@@ -48,17 +67,19 @@ export default {
 					value: "change",
 					label: "改名"
 				},
-				{
-					value: "merge",
-					label: "合併"
-				},
+				// {
+				// 	value: "merge",
+				// 	label: "合併"
+				// },
 				{
 					value: "key-value",
 					label: "對應值"
 				}
 			],
 			selectedOption: "change",
-			changeNameValue: ""
+			changeNameValue: "",
+			mergeWay: "",
+			keyValueValue: ""
 		};
 	},
 	computed: {
@@ -69,104 +90,113 @@ export default {
 			return show.join();
 		},
 		headerIndexs() {
-			return this.testHeaders.map(item => {
+			return this.headers.map(item => {
 				return item.value;
 			});
 		},
-		...mapGetters(["headers", "testHeaders"])
+		...mapGetters(["headers"])
 	},
 	methods: {
 		handleSelectionChange(val) {
 			this.multipleSelection = val;
 		},
 		positionControl(direction) {
-			let tmp = this.testHeaders;
+			let header = this.headers;
 			let indexs = this.headerIndexs;
 			this.multipleSelection.forEach(item => {
 				let index = indexs.indexOf(item.value);
-				tmp.splice(index, 1);
+				header.splice(index, 1);
 				if (direction == "up") {
-					tmp.splice(index - 1, 0, item);
+					header.splice(index - 1, 0, item);
 				} else {
-					tmp.splice(index + 1, 0, item);
+					header.splice(index + 1, 0, item);
 				}
 			});
-			console.log(tmp);
-			this.setTestHeader(tmp);
+			console.log(header);
+			this.setTestHeader(header);
 		},
-		restore() {
+		edit(type) {
+			if (this.multipleSelection.length < 1)
+				this.notify("必須選擇一個欄位", "", "warning");
 			let indexs = this.headerIndexs;
 			this.multipleSelection.forEach(item => {
 				let index = indexs.indexOf(item.value);
-				let tmp = this.testHeaders[index];
-				if (tmp.action != "none") {
-					tmp.action = "none";
-					tmp.value = tmp.old;
-					delete tmp.new;
-					delete tmp.old;
+				let header = this.headers[index];
+				console.log(header);
+				switch (type) {
+					case "restore":
+						this.restore(header);
+						break;
+					case "remove":
+						this.remove(header);
+						break;
+					case "ok":
+						this.action(header);
+						break;
 				}
 			});
 		},
-		remove() {
-			let indexs = this.headerIndexs;
-			this.multipleSelection.forEach(item => {
-				let index = indexs.indexOf(item.value);
-				let tmp = this.testHeaders[index];
-				tmp.action = "delete";
-				tmp["old"] = tmp.value;
-			});
+		restore(header) {
+			this.popHistory(header);
 		},
-		action() {
+		remove(header) {
+			this.pushHistory(header);
+			header.action = "delete";
+		},
+		action(header) {
 			switch (this.selectedOption) {
 				case "change":
-					this.changeName();
+					this.changeName(header);
 					break;
 				case "merge":
-					this.mergeColumn();
+					if (this.multipleSelection.length > 1) break;
+					this.mergeColumn(header);
 					break;
 				case "key-value":
-					this.keyValue();
+					if (this.multipleSelection.length != 1) break;
+					this.keyValue(header);
 					break;
 			}
 		},
-		changeName() {
-			let indexs = this.headerIndexs;
-			this.multipleSelection.forEach(item => {
-				let index = indexs.indexOf(item.value);
-				let tmp = this.testHeaders[index];
-				if (tmp.action != "change") {
-					tmp.action = "change";
-					tmp["old"] = tmp.value;
-					tmp["new"] = this.changeNameValue;
-					tmp.value = tmp["new"];
-				} else {
-					tmp["new"] = this.changeNameValue;
-					tmp.value = tmp["new"];
-				}
-			});
+		changeName(header) {
+			if (this.changeNameValue == "")
+				return this.notify("請輸入文字", "", "warning");
+			this.pushHistory(header);
+			header.action = "change";
+			header.value = this.changeNameValue;
+			header.addition = "";
+			this.$refs.multipleTable.clearSelection();
 		},
-		mergeColumn() {
-			let indexs = this.headerIndexs;
-			if (this.multipleSelection.length < 2) {
-				// this.call("低於2個", "請選擇兩個以上", "warning");
-				return;
+		mergeColumn(header) {
+			this.pushHistory(header);
+			header.action = "merge";
+			header.value = this.mergeColumn;
+			header.addition = this.mergeColumn;
+			this.$refs.multipleTable.clearSelection();
+		},
+		keyValue(header) {
+			if (this.keyValueValue == "")
+				return this.notify("請輸入文字", "", "warning");
+			this.pushHistory(header);
+			header.action = "key-value";
+			header.addition = this.keyValueValue;
+			this.$refs.multipleTable.clearSelection();
+		},
+		pushHistory(header) {
+			let tmp = Object.assign({}, header);
+			header["history"] != undefined
+				? header["history"].push(tmp)
+				: (header["history"] = [tmp]);
+		},
+		popHistory(header) {
+			if (header["history"] != undefined && header["history"].length > 0) {
+				let now = header["history"].pop();
+				header.action = now.action;
+				header.value = now.value;
+				header.addition = now.addition;
 			}
-			this.multipleSelection.forEach(item => {
-				let index = indexs.indexOf(item.value);
-				let tmp = this.testHeaders[index];
-				if (tmp.action != "merge") {
-					tmp.action = "merge";
-					tmp["old"] = tmp.value;
-					tmp["new"] = this.changeNameValue;
-					tmp.value = tmp["new"];
-				} else {
-					tmp["new"] = this.changeNameValue;
-					tmp.value = tmp["new"];
-				}
-			});
 		},
-		keyValue() {},
-		call(title, message, type = "success") {
+		notify(title, message, type = "success") {
 			this.$notify({
 				title,
 				message,

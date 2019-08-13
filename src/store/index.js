@@ -9,44 +9,10 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
     state: {
-        active: 2,
-        soureHeaders: [],
+        active: 0,
+        sourceHeaders: [],
         headers: [],
-        selectedHeaders: [],
-        testHeaders: [
-            {
-                action: "none",
-                value: "a"
-            },
-            {
-                action: "none",
-                value: "b"
-            },
-            {
-                action: "none",
-                value: "c"
-            },
-            {
-                action: "none",
-                value: "d"
-            },
-            {
-                action: "none",
-                value: "e"
-            },
-            {
-                action: "none",
-                value: "f"
-            },
-            {
-                action: "none",
-                value: "g"
-            },
-            {
-                action: "none",
-                value: "h"
-            }
-        ]
+        selectedHeaders: []
     },
     getters,
     mutations,

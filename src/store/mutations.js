@@ -7,20 +7,17 @@ export default {
         }
     },
     [types.NEXT_SETP](state) {
-        if (state.active < 3) {
+        if (state.active < 2) {
             state.active++;
         }
     },
     [types.SET_SOURCE_HEADER](state, payload) {
-        state.soureHeaders.push(payload);
+        state.sourceHeaders.push(payload);
     },
     [types.SET_HEADER](state, payload) {
         state.headers = payload;
     },
     [types.SET_SELECTED_HEADER](state, payload) {
         state.selectedHeaders = payload;
-    },
-    [types.SET_TEST_HEADER](state, payload) {
-        state.testHeaders = payload;
     }
 };

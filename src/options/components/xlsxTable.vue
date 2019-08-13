@@ -2,7 +2,7 @@
 	<div class="xlsx_table">
 		<span>請選擇要使用的表頭</span>
 		<el-select v-model="selectedValue" placeholder="請選擇資料表" no-data-text="無資料(請上傳資料)">
-			<el-option-group v-for="(file, index) in soureHeaders" :key="index" :label="file.name">
+			<el-option-group v-for="(file, index) in sourceHeaders" :key="index" :label="file.name">
 				<el-option
 					v-for="(sheet,id) in file.sheets"
 					:key="id"
@@ -46,7 +46,7 @@ export default {
 		}
 	},
 	computed: {
-		...mapGetters(["soureHeaders", "headers"])
+		...mapGetters(["sourceHeaders", "headers"])
 	},
 	methods: {
 		handleSelectionChange() {
