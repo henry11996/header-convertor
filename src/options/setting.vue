@@ -5,7 +5,7 @@
 			<el-select v-model="selected" filterable placeholder="請選擇規則">
 				<el-option v-for="(item,index) in options" :key="index" :label="index" :value="index"></el-option>
 			</el-select>
-			<el-input v-model="input" placeholder="请输入内容"></el-input>
+			<el-input v-model="input" placeholder="請輸入內容"></el-input>
 
 			<el-button type="primary" icon="el-icon-check" @click="changeName"></el-button>
 			<el-button type="danger" icon="el-icon-delete" @click="deleteName"></el-button>

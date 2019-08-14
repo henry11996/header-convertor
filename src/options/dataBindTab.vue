@@ -13,13 +13,25 @@
 		</div>
 		<div v-if="active == 2" class="step_3">
 			<head-editer></head-editer>
-			<!-- <sortable-box></sortable-box> -->
 		</div>
 		<div class="but">
 			<el-button type="primary" plain @click="preStep" :disabled="active==0">上一步</el-button>
 			<el-button type="primary" plain @click="nextStep" v-if="active!=2" :disabled="active==2">下一步</el-button>
-			<el-button type="danger" plain @click="save" v-if="active==2" :disabled="!canSave">儲存</el-button>
+			<el-button
+				type="danger"
+				plain
+				@click="dialogFormVisible = true"
+				v-if="active==2"
+				:disabled="!canSave"
+			>儲存</el-button>
 		</div>
+		<el-dialog title="規則名稱" :visible.sync="dialogFormVisible">
+			<el-input v-model="ruleName" autocomplete="off"></el-input>
+			<div slot="footer" class="dialog-footer">
+				<el-button @click="dialogFormVisible = false">取 消</el-button>
+				<el-button type="primary" @click="save">确 定</el-button>
+			</div>
+		</el-dialog>
 	</div>
 </template>
 
@@ -28,15 +40,16 @@ import { mapActions, mapGetters } from "vuex";
 import XlsxUpload from "./components/xlsxUpload.vue";
 import XlsxTable from "./components/xlsxTable.vue";
 import HeadEditer from "./components/headEditer";
-import SortableBox from "./components/sortableBox.vue";
 import storeService from "./mixins/storeService";
 export default {
 	data() {
-		return {};
+		return {
+			dialogFormVisible: false,
+			ruleName: ""
+		};
 	},
 	components: {
 		XlsxUpload,
-		SortableBox,
 		XlsxTable,
 		HeadEditer
 	},
@@ -53,25 +66,22 @@ export default {
 	methods: {
 		...mapActions(["preStep", "nextStep"]),
 		async save() {
-			let that = this;
-			this.$prompt("請輸入規則名稱", "儲存", {
-				confirmButtonText: "確認",
-				cancelButtonText: "取消"
-			})
-				.then(async ({ value }) => {
-					await that.storeData(value, that.headers);
-					that.$notify({
-						title: "規則: " + value + "儲存成功",
+			this.dialogFormVisible = false;
+			if (this.ruleName != "") {
+				try {
+					await this.storeData(this.ruleName, this.headers);
+					this.$notify({
+						title: "規則: " + this.ruleName + "儲存成功",
 						type: "success"
 					});
-				})
-				.catch(e => {
-					that.$notify({
+				} catch (error) {
+					this.$notify({
 						title: "規則: " + "儲存失敗",
-						message: e,
+						message: error,
 						type: "warning"
 					});
-				});
+				}
+			}
 		}
 	}
 };

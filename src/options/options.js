@@ -19,7 +19,7 @@ import {
     Input,
     Transfer,
     Notification,
-    MessageBox
+    Dialog
 } from "element-ui";
 Vue.use(Button);
 Vue.use(Select);
@@ -35,10 +35,8 @@ Vue.use(OptionGroup);
 Vue.use(Input);
 Vue.use(Transfer);
 Vue.use(Notification);
-Vue.use(MessageBox);
+Vue.use(Dialog);
 Vue.prototype.$notify = Notification;
-Vue.prototype.$msgbox = MessageBox;
-Vue.prototype.$prompt = MessageBox.prompt;
 new Vue({
     el: "#app",
     store,

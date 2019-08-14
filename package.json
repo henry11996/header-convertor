@@ -1,7 +1,7 @@
 {
   "name": "header-convertor",
-  "version": "0.0.2",
-  "description": "A Vue.js web extension",
+  "version": "0.0.3",
+  "description": "Can nodfiy xlsx header",
   "author": "henry.w <henry.w@evolutivelabs.com>",
   "scripts": {
     "build": "cross-env NODE_ENV=production webpack --hide-modules",
