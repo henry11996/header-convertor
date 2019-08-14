@@ -60,9 +60,7 @@ export default {
 			reader.onload = e => {
 				let result = e.target.result;
 				result = JSON.parse(result);
-				chrome.storage.sync.set(result, function() {
-					that.makeToast("Import Success", "Success import data", "success");
-				});
+				chrome.storage.sync.set(result);
 			};
 			reader.readAsBinaryString(file);
 		},
@@ -77,11 +75,6 @@ export default {
 				a.href = url;
 				a.download = filename;
 				a.click();
-				that.makeToast(
-					"Export Success",
-					"Your file name is " + filename,
-					"success"
-				);
 			});
 		}
 	}

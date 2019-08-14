@@ -1,6 +1,6 @@
 {
   "name": "header-convertor",
-  "version": "1.0.0",
+  "version": "0.0.2",
   "description": "A Vue.js web extension",
   "author": "henry.w <henry.w@evolutivelabs.com>",
   "scripts": {
