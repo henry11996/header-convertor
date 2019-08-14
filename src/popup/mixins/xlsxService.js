@@ -27,6 +27,16 @@ export default {
                 reader.readAsBinaryString(file);
             });
         },
+        download(xlsx, headerOrder) {
+            console.log(headerOrder);
+            const XLSX = require("xlsx");
+            let ws = XLSX.utils.json_to_sheet(xlsx.sheets.sheet, {
+                    header: headerOrder
+                }),
+                wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, xlsx.sheets.name);
+            XLSX.writeFile(wb, xlsx.name + "(convert).xlsx");
+        },
         takeHeader(datas) {
             let headers = [];
             datas.forEach(value => {

@@ -8,7 +8,8 @@ import {
     Option,
     OptionGroup,
     Badge,
-    Tooltip
+    Tooltip,
+    Loading
 } from "element-ui";
 Vue.use(Button);
 Vue.use(Select);
@@ -17,6 +18,7 @@ Vue.use(Option);
 Vue.use(OptionGroup);
 Vue.use(Badge);
 Vue.use(Tooltip);
+Vue.use(Loading);
 
 global.browser = require("webextension-polyfill");
 Vue.prototype.$browser = global.browser;

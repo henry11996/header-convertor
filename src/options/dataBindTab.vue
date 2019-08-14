@@ -29,7 +29,7 @@ import XlsxUpload from "./components/xlsxUpload.vue";
 import XlsxTable from "./components/xlsxTable.vue";
 import HeadEditer from "./components/headEditer";
 import SortableBox from "./components/sortableBox.vue";
-import saveService from "./mixins/saveService";
+import storeService from "./mixins/storeService";
 export default {
 	data() {
 		return {};
@@ -40,7 +40,7 @@ export default {
 		XlsxTable,
 		HeadEditer
 	},
-	mixins: [saveService],
+	mixins: [storeService],
 	computed: {
 		...mapGetters(["active", "headers"]),
 		canSave() {

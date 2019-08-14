@@ -2,21 +2,28 @@
 	<el-tabs type="border-card">
 		<el-tab-pane>
 			<span slot="label">
-				<i class="el-icon-date"></i> 資料綁定
+				<i class="el-icon-date">資料綁定</i>
 			</span>
 			<DataBindTab></DataBindTab>
 		</el-tab-pane>
-		<el-tab-pane label="更多設定">更多設定</el-tab-pane>
+		<el-tab-pane label="更多設定">
+			<span slot="label">
+				<i class="el-icon-s-unfold">更多設定</i>
+			</span>
+			<Setting></Setting>
+		</el-tab-pane>
 	</el-tabs>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
 import DataBindTab from "./dataBindTab";
+import Setting from "./setting";
 export default {
 	name: "App",
 	components: {
-		DataBindTab
+		DataBindTab,
+		Setting
 	},
 	computed: {},
 	data() {
@@ -30,6 +37,6 @@ export default {
 	margin: 0px;
 }
 .el-icon-date {
-	font-size: 24px;
+	font-size: 16px;
 }
 </style>

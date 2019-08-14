@@ -12,6 +12,9 @@ export const setSourceHeader = ({ commit }, payload) => {
 export const setHeader = ({ commit }, payload) => {
     commit(types.SET_HEADER, payload);
 };
+export const addHeader = ({ commit }, payload) => {
+    commit(types.ADD_HEADER, payload);
+};
 export const setSelectedHeader = ({ commit }, payload) => {
     commit(types.SET_SELECTED_HEADER, payload);
 };

@@ -19,5 +19,8 @@ export default {
     },
     [types.SET_SELECTED_HEADER](state, payload) {
         state.selectedHeaders = payload;
+    },
+    [types.ADD_HEADER](state, payload) {
+        state.headers.push(payload);
     }
 };

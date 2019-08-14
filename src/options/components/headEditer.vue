@@ -57,7 +57,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapActions, mapMutations } from "vuex";
 export default {
 	data() {
 		return {
@@ -113,7 +113,7 @@ export default {
 				}
 			});
 			console.log(header);
-			this.setTestHeader(header);
+			this.setHeader(header);
 		},
 		edit(type) {
 			if (this.multipleSelection.length < 1)
@@ -163,24 +163,30 @@ export default {
 				return this.notify("請輸入文字", "", "warning");
 			this.pushHistory(header);
 			header.action = "change";
+			header.origin = header.value;
 			header.value = this.changeNameValue;
-			header.addition = "";
 			this.$refs.multipleTable.clearSelection();
 		},
 		mergeColumn(header) {
 			this.pushHistory(header);
 			header.action = "merge";
+			header.origin = header.value;
 			header.value = this.mergeColumn;
-			header.addition = this.mergeColumn;
 			this.$refs.multipleTable.clearSelection();
 		},
 		keyValue(header) {
 			if (this.keyValueValue == "")
 				return this.notify("請輸入文字", "", "warning");
-			this.pushHistory(header);
+			// this.pushHistory(header);
+			this.addNewHeader(header);
 			header.action = "key-value";
-			header.addition = this.keyValueValue;
+			header.origin = header.value;
+			header.value = this.keyValueValue;
 			this.$refs.multipleTable.clearSelection();
+		},
+		addNewHeader(header) {
+			const newHead = Object.assign({}, header);
+			this.addHeader(newHead);
 		},
 		pushHistory(header) {
 			let tmp = Object.assign({}, header);
@@ -193,7 +199,7 @@ export default {
 				let now = header["history"].pop();
 				header.action = now.action;
 				header.value = now.value;
-				header.addition = now.addition;
+				header.origin = now.origin;
 			}
 		},
 		notify(title, message, type = "success") {
@@ -203,7 +209,7 @@ export default {
 				type
 			});
 		},
-		...mapActions(["setTestHeader"])
+		...mapActions(["addHeader", "setHeader"])
 	}
 };
 </script>
