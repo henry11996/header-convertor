@@ -1,6 +1,6 @@
 {
   "name": "header-convertor",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Can nodfiy xlsx header",
   "author": "henry.w <henry.w@evolutivelabs.com>",
   "scripts": {
