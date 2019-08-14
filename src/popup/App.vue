@@ -23,6 +23,9 @@ import xlsxUpload from "./components/xlsxUpload";
 import storeService from "./mixins/storeService";
 import xlsxService from "./mixins/xlsxService";
 export default {
+	async mounted() {
+		this.options = await this.getData(null);
+	},
 	data() {
 		return {
 			options: [],
@@ -43,11 +46,16 @@ export default {
 		xlsxUpload
 	},
 	mixins: [storeService, xlsxService],
-	async mounted() {
-		this.options = await this.getData(null);
-	},
 	computed: {
-		...mapGetters(["sourceHeaders"])
+		...mapGetters(["sourceHeaders"]),
+		headerOrder() {
+			let tmp = [];
+			for (let i = 0; i < this.headerRules.length; i++) {
+				const element = this.headerRules[i];
+				tmp.push(element.value);
+			}
+			return tmp;
+		}
 	},
 	watch: {
 		sourceHeaders() {
@@ -72,9 +80,13 @@ export default {
 				const header = this.headerRules[index];
 				if (header.action == "key-value") {
 					this.promtTextList.push({
-						title: "請上傳與" + header.value + "綁定的檔案",
+						title: "請上傳與" + header.origin + "綁定的檔案",
 						message:
-							"請上傳與" + header.value + "=>" + header.origin + "綁定的檔案",
+							"此檔須有" +
+							header.value +
+							"對應" +
+							header.origin +
+							"欄位，欄位名稱須一樣",
 						key: header.origin,
 						value: header.value
 					});
@@ -82,31 +94,39 @@ export default {
 			}
 		},
 		startConvert() {
-			this.loading = this.$loading({
-				lock: true,
-				text: "Loading",
-				spinner: "el-icon-loading",
-				background: "rgba(0, 0, 0, 0.7)"
-			});
+			this.loadingStart(true);
 			this.promtText = "";
 			this.convert();
-			this.loading.close();
+			this.loadingStart(false);
 			window.close();
+		},
+		loadingStart(isStart) {
+			if (isStart) {
+				this.loading = this.$loading({
+					lock: true,
+					text: "Loading",
+					spinner: "el-icon-loading",
+					background: "rgba(0, 0, 0, 0.7)"
+				});
+			} else if (this.loading != "") {
+				this.loading.close();
+			}
 		},
 		convert() {
 			let xlsxName = this.fileList.main.name;
 			let sheetName = this.fileList.main.sheets.name;
 			let sheet = this.fileList.main.sheets.sheet;
+			let newSheet = [];
+			//跑每個
 			for (let i = 0; i < this.headerRules.length; i++) {
 				const header = this.headerRules[i];
-				const action = header.action;
 				const actionFun = function() {};
-				switch (action) {
+				switch (header.action) {
 					case "change":
 						actionFun = function(row) {
 							let val = row[header.origin];
 							delete row[header.origin];
-							row[header.value] = val;
+							return { [header.value]: val };
 						};
 						break;
 					case "key-value":
@@ -117,26 +137,24 @@ export default {
 						});
 						actionFun = function(row) {
 							let value = keyValueKeySheet[row[header.origin]];
-							row[header.value] = value;
+							return { [header.value]: value };
 						};
 						break;
-					case "delete":
+					default:
 						actionFun = function(row) {
-							delete row[header.value];
+							let value = row[header.value];
+							return { [header.value]: value };
 						};
-						break;
 				}
 				for (let j = 0; j < sheet.length; j++) {
 					const row = sheet[j];
-					actionFun(row);
+					const newRow = actionFun(row);
+					if (newSheet[j] == undefined) newSheet[j] = {};
+					newSheet[j] = Object.assign(newRow, newSheet[j]);
 				}
 			}
-			let headerOrder = [];
-			for (let i = 0; i < this.headerRules.length; i++) {
-				const element = this.headerRules[i];
-				headerOrder.push(element.value);
-			}
-			this.download(this.fileList.main, headerOrder);
+			this.fileList.main.sheets.sheet = newSheet;
+			this.download(this.fileList.main, this.headerOrder);
 		}
 	}
 };
