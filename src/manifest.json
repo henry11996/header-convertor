@@ -1,7 +1,7 @@
 {
-  "name": "header-conversion",
+  "name": "header-convertor",
   "description": "can conver a data header",
-  "version": "0.0.2",
+  "version": "0.0.5",
   "manifest_version": 2,
   "permissions": [
     "storage"
@@ -10,7 +10,7 @@
     "128": "icons/icon_128.png"
   },
   "browser_action": {
-    "default_title": "header-conversion",
+    "default_title": "header-convertor",
     "default_popup": "popup/popup.html"
   },
   "background": {

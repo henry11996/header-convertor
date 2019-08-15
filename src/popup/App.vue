@@ -136,13 +136,25 @@ export default {
 							keyValueKeySheet[value[header.origin]] = value[header.value];
 						});
 						actionFun = function(row) {
-							let value = keyValueKeySheet[row[header.origin]];
+							const value = keyValueKeySheet[row[header.origin]];
+							return { [header.value]: value };
+						};
+						break;
+					case "replace":
+						actionFun = function(row) {
+							header.origin.forEach(element => {
+								row[header.value] = row[header.value].replace(
+									element.search,
+									element.replace
+								);
+							});
+							const value = row[header.value];
 							return { [header.value]: value };
 						};
 						break;
 					default:
 						actionFun = function(row) {
-							let value = row[header.value];
+							const value = row[header.value];
 							return { [header.value]: value };
 						};
 				}

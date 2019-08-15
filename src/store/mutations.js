@@ -1,4 +1,5 @@
 import * as types from "./mutation-types";
+import { platform } from "os";
 
 export default {
     [types.PRE_STEP](state) {
@@ -21,6 +22,6 @@ export default {
         state.selectedHeaders = payload;
     },
     [types.ADD_HEADER](state, payload) {
-        state.headers.push(payload);
+        state.headers.splice(payload.position, 0, payload.header);
     }
 };

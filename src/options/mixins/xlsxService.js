@@ -35,6 +35,7 @@ export default {
                 let tmp = {};
                 tmp["name"] = value.name;
                 tmp["header"] = header;
+                tmp["example"] = value.sheet[0];
                 headers.push(tmp);
             });
             return headers;

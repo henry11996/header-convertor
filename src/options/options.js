@@ -19,7 +19,9 @@ import {
     Input,
     Transfer,
     Notification,
-    Dialog
+    Dialog,
+    Tooltip,
+    Badge
 } from "element-ui";
 Vue.use(Button);
 Vue.use(Select);
@@ -36,6 +38,8 @@ Vue.use(Input);
 Vue.use(Transfer);
 Vue.use(Notification);
 Vue.use(Dialog);
+Vue.use(Tooltip);
+Vue.use(Badge);
 Vue.prototype.$notify = Notification;
 new Vue({
     el: "#app",

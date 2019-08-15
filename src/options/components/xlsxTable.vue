@@ -3,12 +3,7 @@
 		<span>請選擇要使用的表頭</span>
 		<el-select v-model="selectedValue" placeholder="請選擇資料表" no-data-text="無資料(請上傳資料)">
 			<el-option-group v-for="(file, index) in sourceHeaders" :key="index" :label="file.name">
-				<el-option
-					v-for="(sheet,id) in file.sheets"
-					:key="id"
-					:label="sheet.name"
-					:value="sheet.header"
-				></el-option>
+				<el-option v-for="(sheet,id) in file.sheets" :key="id" :label="sheet.name" :value="sheet"></el-option>
 			</el-option-group>
 		</el-select>
 		<el-transfer
@@ -16,7 +11,7 @@
 			:data="dataValues"
 			:titles="['Source', 'Target']"
 			empty-text="無資料(請上傳資料)"
-			@change="handleSelectionChange"
+			@change="handleTransferChange"
 		></el-transfer>
 	</div>
 </template>
@@ -35,10 +30,11 @@ export default {
 		selectedValue() {
 			if (typeof this.selectedValue == "object") {
 				let len = this.dataValues.length;
-				this.selectedValue.forEach((label, key) => {
+				this.selectedValue.header.forEach((label, key) => {
 					this.dataValues.push({
 						key: key + len,
 						label,
+						example: this.selectedValue.example[label],
 						disabled: false
 					});
 				});
@@ -49,13 +45,14 @@ export default {
 		...mapGetters(["sourceHeaders", "headers"])
 	},
 	methods: {
-		handleSelectionChange() {
+		handleTransferChange() {
 			let tmp = [];
 			this.dataValues.forEach((value, index) => {
 				if (this.transferData.includes(value.key)) {
 					tmp.push({
 						action: "none",
-						value: value.label
+						value: value.label,
+						example: value.example
 					});
 				}
 			});
