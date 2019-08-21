@@ -23,13 +23,13 @@
 			@selection-change="handleSelectionChange"
 			empty-text="無資料"
 			stripe
-			max-height="300px"
+			max-height="500px"
 		>
 			<el-table-column type="selection" width="55"></el-table-column>
-			<el-table-column label="表頭" width="150">
+			<el-table-column label="表頭" width="200">
 				<template slot-scope="scope">{{ scope.row.value }}</template>
 			</el-table-column>
-			<el-table-column label="範例資料" width="150">
+			<el-table-column label="範例資料" width="200">
 				<template slot-scope="scope">{{ scope.row.example }}</template>
 			</el-table-column>
 			<el-table-column label="方式" width="120">
@@ -140,12 +140,12 @@ export default {
 		edit(type) {
 			if (this.multipleSelection.length < 1)
 				this.notify("必須選擇一個欄位", "", "warning");
-			if (this.input == "") return this.notify("請輸入文字", "", "warning");
+			if (type == "ok" && this.input == "")
+				return this.notify("請輸入文字", "", "warning");
 			let indexs = this.headerIndexs;
 			this.multipleSelection.forEach(item => {
 				let index = indexs.indexOf(item.value);
 				let header = this.headers[index];
-				console.log(header);
 				switch (type) {
 					case "restore":
 						this.restore(header);
@@ -270,7 +270,6 @@ export default {
 	margin-left: 20px;
 	justify-content: start;
 	flex-direction: column;
-	width: 40vh;
 }
 .edit_button {
 	margin-top: 10px;

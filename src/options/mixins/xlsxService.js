@@ -14,7 +14,11 @@ export default {
                     });
                     workbook.SheetNames.forEach(name => {
                         let sheet = XLSX.utils.sheet_to_json(
-                            workbook.Sheets[name]
+                            workbook.Sheets[name],
+                            { 
+                                defval:'',
+                                raw:false
+                            }
                         );
                         if (sheet.length > 0) {
                             datas.push({
@@ -23,6 +27,7 @@ export default {
                             });
                         }
                     });
+
                     resolve(datas);
                 };
                 reader.readAsBinaryString(file);

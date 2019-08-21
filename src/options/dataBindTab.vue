@@ -5,15 +5,9 @@
 			<el-step title="步驟 2 - 資料整理" icon="el-icon-edit"></el-step>
 			<el-step title="步驟 3 - 資料綁定" icon="el-icon-document-copy"></el-step>
 		</el-steps>
-		<div v-if="active == 0" class="step_1">
-			<xlsx-upload></xlsx-upload>
-		</div>
-		<div v-if="active == 1" class="step_2">
-			<xlsx-table></xlsx-table>
-		</div>
-		<div v-if="active == 2" class="step_3">
-			<head-editer></head-editer>
-		</div>
+		<keep-alive>
+			<component :is="activeStep.component" :style="activeStep.styles"></component>
+		</keep-alive>
 		<div class="but">
 			<el-button type="primary" plain @click="preStep" :disabled="active==0">上一步</el-button>
 			<el-button type="primary" plain @click="nextStep" v-if="active!=2" :disabled="active==2">下一步</el-button>
@@ -61,6 +55,26 @@ export default {
 				return true;
 			}
 			return false;
+		},
+		activeStep() {
+			switch (this.active) {
+				case 0:
+					return {
+						component: XlsxUpload,
+						styles: {}
+					};
+				case 1:
+					return {
+						component: XlsxTable,
+						styles: {}
+					};
+				case 2:
+					return {
+						component: HeadEditer,
+						styles: {}
+					};
+			}
+			return;
 		}
 	},
 	methods: {
@@ -94,11 +108,4 @@ export default {
 .but {
 	text-align: center;
 }
-.step_2 {
-	margin: 10px;
-	display: flex;
-	justify-content: center;
-}
-</style>
->
 </style>

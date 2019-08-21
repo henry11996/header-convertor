@@ -1,7 +1,13 @@
 <template>
 	<div>
 		<div class="main">
-			<el-select v-model="selected" filterable placeholder="請選擇規則" @change="ruleChange">
+			<el-select
+				v-model="selected"
+				filterable
+				placeholder="請選擇規則"
+				no-data-text="無資料"
+				@change="ruleChange"
+			>
 				<el-option v-for="(item,index) in options" :key="index" :label="index" :value="index"></el-option>
 			</el-select>
 			<span v-if="selected != '' && promtText != ''">
@@ -52,7 +58,7 @@ export default {
 			let tmp = [];
 			for (let i = 0; i < this.headerRules.length; i++) {
 				const element = this.headerRules[i];
-				tmp.push(element.value);
+				if (element.action != "delete") tmp.push(element.value);
 			}
 			return tmp;
 		}
@@ -117,7 +123,7 @@ export default {
 			let sheetName = this.fileList.main.sheets.name;
 			let sheet = this.fileList.main.sheets.sheet;
 			let newSheet = [];
-			//跑每個
+			//跑每個規則
 			for (let i = 0; i < this.headerRules.length; i++) {
 				const header = this.headerRules[i];
 				const actionFun = function() {};

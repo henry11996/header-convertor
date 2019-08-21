@@ -9,13 +9,9 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
     state: {
-        active: 2,
+        active: 0,
         sourceHeaders: [],
-        headers: [
-            { action: "none", value: "A1", example: "abc" },
-            { action: "none", value: "B1", example: "bac" },
-            { action: "none", value: "C1", example: "cab" }
-        ],
+        headers: [],
         selectedHeaders: []
     },
     getters,

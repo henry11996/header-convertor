@@ -9,6 +9,8 @@
 		<el-transfer
 			v-model="transferData"
 			:data="dataValues"
+			filterable
+			filter-placeholder="輸入要查詢內容"
 			:titles="['Source', 'Target']"
 			empty-text="無資料(請上傳資料)"
 			@change="handleTransferChange"
@@ -64,9 +66,26 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .xlsx_table {
 	display: flex;
 	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+.el-select {
+	width: 40vw;
+}
+.el-transfer {
+	margin: 10px;
+}
+.el-transfer-panel__body {
+	height: 58vh;
+}
+.el-transfer-panel__list {
+	height: 58vh !important;
+}
+.el-transfer-panel__filter {
+	width: fit-content;
 }
 </style>
