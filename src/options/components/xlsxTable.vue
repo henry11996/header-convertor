@@ -83,7 +83,8 @@ export default {
 	height: 58vh;
 }
 .el-transfer-panel__list {
-	height: 58vh !important;
+	/* height: fit-content !important; */
+	height: 50vh !important;
 }
 .el-transfer-panel__filter {
 	width: fit-content;

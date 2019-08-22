@@ -22,8 +22,8 @@
 			tooltip-effect="dark"
 			@selection-change="handleSelectionChange"
 			empty-text="無資料"
-			stripe
 			max-height="500px"
+			:row-style="rowStyle"
 		>
 			<el-table-column type="selection" width="55"></el-table-column>
 			<el-table-column label="表頭" width="200">
@@ -122,6 +122,11 @@ export default {
 		handleSelectionChange(val) {
 			this.multipleSelection = val;
 		},
+		rowStyle({ row, rowIndex }) {
+			if (row.action == "delete") return { background: "lightcoral" };
+			if (row.action != "none") return { background: "lightyellow" };
+			return "";
+		},
 		positionControl(direction) {
 			let header = this.headers;
 			let indexs = this.headerIndexs;
@@ -159,6 +164,7 @@ export default {
 				}
 			});
 			this.input == "";
+			this.$refs.multipleTable.clearSelection();
 		},
 		restore(header) {
 			this.popHistory(header);
@@ -190,14 +196,12 @@ export default {
 			header.action = "change";
 			header.origin = header.value;
 			header.value = this.input;
-			this.$refs.multipleTable.clearSelection();
 		},
 		mergeColumn(header) {
 			this.pushHistory(header);
 			header.action = "merge";
 			header.origin = header.value;
 			header.value = this.input;
-			this.$refs.multipleTable.clearSelection();
 		},
 		keyValue(header, index) {
 			// this.pushHistory(header);
@@ -206,7 +210,6 @@ export default {
 			header.origin = header.value; //key
 			header.value = this.input; //value
 			header.example = "key:" + header.origin + ",value:" + header.value;
-			this.$refs.multipleTable.clearSelection();
 		},
 		replaceValue(header) {
 			this.pushHistory(header);

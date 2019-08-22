@@ -44,8 +44,7 @@ export default {
 				message: "上傳主要要轉換的檔案",
 				key: "main"
 			},
-			promtTextList: [],
-			loading: ""
+			promtTextList: []
 		};
 	},
 	components: {
@@ -106,18 +105,6 @@ export default {
 			this.loadingStart(false);
 			window.close();
 		},
-		loadingStart(isStart) {
-			if (isStart) {
-				this.loading = this.$loading({
-					lock: true,
-					text: "Loading",
-					spinner: "el-icon-loading",
-					background: "rgba(0, 0, 0, 0.7)"
-				});
-			} else if (this.loading != "") {
-				this.loading.close();
-			}
-		},
 		convert() {
 			let xlsxName = this.fileList.main.name;
 			let sheetName = this.fileList.main.sheets.name;
@@ -156,6 +143,11 @@ export default {
 							});
 							const value = row[header.value];
 							return { [header.value]: value };
+						};
+						break;
+					case "delete":
+						actionFun = function(row) {
+							return {};
 						};
 						break;
 					default:

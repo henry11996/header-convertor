@@ -1,7 +1,14 @@
 export default {
+    data(){
+        return{
+            loading: ""     
+        }
+    },
     methods: {
         async parse(file, codepage) {
             return new Promise((resolve, reject) => {
+                this.loadingStart(true)
+                let that = this
                 const XLSX = require("xlsx");
                 var datas = [];
                 var reader = new FileReader();
@@ -13,11 +20,7 @@ export default {
                     });
                     workbook.SheetNames.forEach(name => {
                         let sheet = XLSX.utils.sheet_to_json(
-                            workbook.Sheets[name],
-                            { 
-                                defval:'',
-                                raw:false
-                            }
+                            workbook.Sheets[name]
                         );
                         if (sheet.length > 0) {
                             datas.push({
@@ -26,13 +29,13 @@ export default {
                             });
                         }
                     });
+                    that.loadingStart(false)
                     resolve(datas);
                 };
                 reader.readAsBinaryString(file);
             });
         },
         download(xlsx, headerOrder) {
-            console.log(headerOrder);
             const XLSX = require("xlsx");
             let ws = XLSX.utils.json_to_sheet(xlsx.sheets.sheet, {
                     header: headerOrder
@@ -51,6 +54,18 @@ export default {
                 headers.push(tmp);
             });
             return headers;
-        }
+        },
+        loadingStart(isStart) {
+			if (isStart) {
+				this.loading = this.$loading({
+					lock: true,
+					text: "Loading",
+					spinner: "el-icon-loading",
+					background: "rgba(0, 0, 0, 0.7)"
+				});
+			} else if (this.loading != "") {
+				this.loading.close();
+			}
+		},
     }
 };
