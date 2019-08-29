@@ -31,8 +31,10 @@ export default {
 		this.init();
 	},
 	watch: {
-		selected() {
+		async selected() {
 			this.input = this.selected;
+			const rule = await this.getData(this.selected);
+			this.setHeader(rule[this.selected]);
 		}
 	},
 	computed: {},
@@ -76,7 +78,8 @@ export default {
 				a.download = filename;
 				a.click();
 			});
-		}
+		},
+		...mapActions(["setHeader"])
 	}
 };
 </script>
