@@ -2,8 +2,8 @@
 	<div>
 		<el-steps :active="active" simple>
 			<el-step title="步驟 1 - 資料上傳" icon="el-icon-upload"></el-step>
-			<el-step title="步驟 2 - 資料整理" icon="el-icon-edit"></el-step>
-			<el-step title="步驟 3 - 資料綁定" icon="el-icon-document-copy"></el-step>
+			<el-step title="步驟 2 - 資料選擇" icon="el-icon-edit"></el-step>
+			<el-step title="步驟 3 - 規則設定" icon="el-icon-document-copy"></el-step>
 		</el-steps>
 		<keep-alive>
 			<component :is="activeStep.component" :style="activeStep.styles"></component>

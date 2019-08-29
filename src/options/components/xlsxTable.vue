@@ -1,20 +1,30 @@
 <template>
-	<div class="xlsx_table">
-		<span>請選擇要使用的表頭</span>
-		<el-select v-model="selectedValue" placeholder="請選擇資料表" no-data-text="無資料(請上傳資料)">
-			<el-option-group v-for="(file, index) in sourceHeaders" :key="index" :label="file.name">
-				<el-option v-for="(sheet,id) in file.sheets" :key="id" :label="sheet.name" :value="sheet"></el-option>
-			</el-option-group>
-		</el-select>
-		<el-transfer
-			v-model="transferData"
-			:data="dataValues"
-			filterable
-			filter-placeholder="輸入要查詢內容"
-			:titles="['Source', 'Target']"
-			empty-text="無資料(請上傳資料)"
-			@change="handleTransferChange"
-		></el-transfer>
+	<div>
+		<div class="info_2">
+			<ul>
+				<li>使用說明</li>
+				<ol>
+					<li>選擇要使用的表頭即可往下一步</li>
+				</ol>
+			</ul>
+		</div>
+		<div class="xlsx_table">
+			<span>請選擇要使用的表頭</span>
+			<el-select v-model="selectedValue" placeholder="請選擇資料表" no-data-text="無資料(請上傳資料)">
+				<el-option-group v-for="(file, index) in sourceHeaders" :key="index" :label="file.name">
+					<el-option v-for="(sheet,id) in file.sheets" :key="id" :label="sheet.name" :value="sheet"></el-option>
+				</el-option-group>
+			</el-select>
+			<el-transfer
+				v-model="transferData"
+				:data="dataValues"
+				filterable
+				filter-placeholder="輸入要查詢內容"
+				:titles="['未選擇區域', '已選擇區域']"
+				empty-text="無資料(請上傳資料)"
+				@change="handleTransferChange"
+			></el-transfer>
+		</div>
 	</div>
 </template>
 
@@ -88,5 +98,15 @@ export default {
 }
 .el-transfer-panel__filter {
 	width: fit-content;
+}
+.info_2 {
+	color: gray;
+	width: 19vw;
+	margin-top: 29vh;
+	position: absolute;
+	float: left;
+	font-size: 13px;
+	border: 1px solid;
+	padding: 0px;
 }
 </style>

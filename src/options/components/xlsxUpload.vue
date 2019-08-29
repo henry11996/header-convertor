@@ -1,26 +1,38 @@
 <template>
-	<div class="upload">
-		<el-upload
-			class="upload-demo"
-			action
-			:on-change="handleFile"
-			:file-list="fileList"
-			accept="xlsx, xls"
-		>
-			<el-button size type="primary">上傳</el-button>
-			<el-select
-				v-model="value"
-				filterable
-				placeholder="編碼方式"
-				no-data-text
-				no-match-text
-				loading-text
-				size="small"
+	<div>
+		<div class="info">
+			<ul>
+				<li>使用說明</li>
+				<ol>
+					<li>在'資料上傳'區上傳所需要轉換的xlsx檔案</li>
+					<li>在'資料選擇'區選擇所需要使用的表頭</li>
+					<li>在'規則設定'區設定條件規則</li>
+				</ol>
+			</ul>
+		</div>
+		<div class="upload">
+			<el-upload
+				class="upload-demo"
+				action
+				:on-change="handleFile"
+				:file-list="fileList"
+				accept=".xlsx, .xls, .csv"
 			>
-				<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
-			</el-select>
-			<div slot="tip" class="el-upload__tip">只能上傳xlsx/xls文件</div>
-		</el-upload>
+				<el-button size type="primary">上傳</el-button>
+				<el-select
+					v-model="value"
+					filterable
+					placeholder="編碼方式"
+					no-data-text
+					no-match-text
+					loading-text
+					size="small"
+				>
+					<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+				</el-select>
+				<div slot="tip" class="el-upload__tip">只能上傳xlsx/xls文件</div>
+			</el-upload>
+		</div>
 	</div>
 </template>
 <script>
@@ -70,5 +82,15 @@ export default {
 }
 .el-select {
 	width: 15vw;
+}
+.info {
+	color: gray;
+	width: 30vw;
+	margin-left: 30px;
+	position: absolute;
+	float: left;
+	font-size: 16px;
+	border: 1px solid;
+	padding-right: 20px;
 }
 </style>

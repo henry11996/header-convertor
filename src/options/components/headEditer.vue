@@ -22,7 +22,7 @@
 			tooltip-effect="dark"
 			@selection-change="handleSelectionChange"
 			empty-text="無資料"
-			max-height="500px"
+			max-height="70vh"
 			:row-style="rowStyle"
 		>
 			<el-table-column type="selection" width="55"></el-table-column>
@@ -71,6 +71,12 @@
 				<el-button type="danger" icon="el-icon-delete" circle @click="edit('remove')"></el-button>
 			</div>
 		</div>
+		<div class="info_3">
+			<ul>
+				<li>使用說明</li>
+				<ol v-html="info"></ol>
+			</ul>
+		</div>
 	</div>
 </template>
 
@@ -83,7 +89,8 @@ export default {
 			options: [
 				{
 					value: "change",
-					label: "改名"
+					label: "改名",
+					info: "<li>輸入要改的名字即可</li>"
 				},
 				// {
 				// 	value: "merge",
@@ -91,11 +98,14 @@ export default {
 				// },
 				{
 					value: "key-value",
-					label: "對應值"
+					label: "對應值",
+					info:
+						"<li>請輸入要與此欄位綁定的資料</li><li>之後轉換時會需要再上傳時與此欄位相應的檔案</li>"
 				},
 				{
 					value: "replace",
-					label: "取代"
+					label: "取代",
+					info: "<li>輸入取代的字串即可</li><li>目前無法調整取代順序</li>"
 				}
 			],
 			selectedOption: "change",
@@ -115,6 +125,15 @@ export default {
 			return this.headers.map(item => {
 				return item.value;
 			});
+		},
+		info() {
+			let tmp = "";
+			this.options.forEach(element => {
+				if (element.value == this.selectedOption) {
+					tmp = element.info;
+				}
+			});
+			return tmp;
 		},
 		...mapGetters(["headers"])
 	},
@@ -264,6 +283,7 @@ export default {
 
 <style scoped>
 .main {
+	height: 70vh;
 	margin: 20px;
 	display: flex;
 	justify-content: center;
@@ -292,5 +312,16 @@ export default {
 }
 .el-button {
 	margin: 0%;
+}
+.info_3 {
+	color: gray;
+	width: 30vw;
+	position: absolute;
+	float: right;
+	font-size: 13px;
+	border: 1px solid;
+	padding: 0px;
+	right: 3vw;
+	bottom: 10vh;
 }
 </style>
